@@ -4,18 +4,8 @@ from jnpr.junos.exception import *
 import sys
 from PyQt5.QtWidgets import *
 
-
-# pushButton --> compare
-# pushButton_2 --> commit check
-# pushButton_3 --> commit
-# textBrowser --> result
-# textEdit --> configuration
-# lineEdit --> IP
-# lineEdit_2 --> ID
-# lineEdit_3 --> Password
-
-
-class NetconfTest(QWidget):
+#class NetconfTest(QWidget):
+class NetconfTest(QDialog):
 
     def __init__(self):
         super().__init__()
@@ -26,7 +16,7 @@ class NetconfTest(QWidget):
 
         self.setWindowTitle('netconf_test')
         self.setGeometry(300, 300, 1400, 700)
-        self.show()
+
 
         #정보입력 창
         self.ip = QLineEdit()
@@ -34,10 +24,13 @@ class NetconfTest(QWidget):
         self.pw = QLineEdit()
         self.pw.setEchoMode(QLineEdit.Password)
         self.input = QTextEdit()
-        self.result = QTextBrowser()
+        self.result = QTextEdit()
         self.compareButton = QPushButton('compare')
+        self.compareButton.setAutoDefault(False)
         self.commitcheckButton = QPushButton('commit check')
+        self.commitcheckButton.setAutoDefault(False)
         self.commitButton = QPushButton('commit')
+        self.commitButton.setAutoDefault(False)
 
         Line1 = QHBoxLayout()
         Line1.addWidget(QLabel('IP:'))
@@ -121,8 +114,11 @@ class NetconfTest(QWidget):
                 self.result.setText(str(err))
         dev.close()
 
+    def showModal(self):
+        return super().exec_()
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ex = NetconfTest()
-    sys.exit(app.exec_())
+# if __name__ == '__main__':
+#     app = QApplication(sys.argv)
+#     ex = NetconfTest()
+#     ex.show()
+#     sys.exit(app.exec_())

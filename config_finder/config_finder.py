@@ -3,39 +3,41 @@ import re
 import ipcalc
 from PyQt5.QtWidgets import *
 
-
-class ConfigFinder(QWidget):
+#class ConfigFinder(QWidget):
+class ConfigFinder(QDialog):
 
     def __init__(self):
         super().__init__()
         self.initUI()
 
     def initUI(self):
-        grid = QGridLayout()
-        self.setLayout(grid)
         self.setWindowTitle('Config_Finder')
         self.setGeometry(300, 300, 1400, 700)
-        self.show()
 
         #파일 열기
         self.filename = QLineEdit()
         self.openButton = QPushButton('열기')
         self.openButton.clicked.connect(self.openButtonClicked)
+        self.openButton.setAutoDefault(False)
+
 
         # 오른쪽 창
-        self.search_input = QLineEdit()
-        self.search_input.returnPressed.connect(self.searchButtonClicked)
-        self.search_output = QTextEdit()
-        self.searchButton = QPushButton('실행')
-        self.searchButton.clicked.connect(self.searchButtonClicked)
+        self.search1_input = QLineEdit()
+        self.search1_input.returnPressed.connect(self.search1ButtonClicked)
+        self.search1_output = QTextEdit()
+        self.search1Button = QPushButton('실행')
+        self.search1Button.clicked.connect(self.search1ButtonClicked)
+        self.search1Button.setAutoDefault(False)
 
         # 왼쪽창
-        self.interface_input = QLineEdit()
-        self.interface_input.returnPressed.connect(self.excuteButtonClicked)
-        self.result_output = QTextEdit()
-        self.excuteButton = QPushButton('실행')
-        self.excuteButton.clicked.connect(self.excuteButtonClicked)
+        self.search2_input = QLineEdit()
+        self.search2_input.returnPressed.connect(self.search2ButtonClicked)
+        self.search2_output = QTextEdit()
+        self.search2Button = QPushButton('실행')
+        self.search2Button.clicked.connect(self.search2ButtonClicked)
+        self.search2Button.setAutoDefault(False)
 
+        grid = QGridLayout()
         grid.addWidget(QLabel('File:'), 0, 0)
         grid.addWidget(QLabel('Search:'), 1, 0)
         grid.addWidget(QLabel('Result:'), 2, 0)
@@ -43,13 +45,15 @@ class ConfigFinder(QWidget):
         grid.addWidget(self.filename, 0, 1)
         grid.addWidget(self.openButton, 0, 2)
 
-        grid.addWidget(self.search_input, 1, 1)
-        grid.addWidget(self.searchButton, 1, 2)
-        grid.addWidget(self.interface_input, 1, 3)
-        grid.addWidget(self.excuteButton, 1, 4)
+        grid.addWidget(self.search1_input, 1, 1)
+        grid.addWidget(self.search1Button, 1, 2)
+        grid.addWidget(self.search2_input, 1, 3)
+        grid.addWidget(self.search2Button, 1, 4)
 
-        grid.addWidget(self.search_output, 2, 1)
-        grid.addWidget(self.result_output, 2, 3)
+        grid.addWidget(self.search1_output, 2, 1)
+        grid.addWidget(self.search2_output, 2, 3)
+
+        self.setLayout(grid)
 
     def openButtonClicked(self):
         fname = QFileDialog.getOpenFileName(self)
@@ -85,30 +89,35 @@ class ConfigFinder(QWidget):
                     config_list = config_list + [line for line in set_config_list if re.match(f'(.*{ipv6_comp}.*)', line)]
         except:
             pass
+
         return config_list
 
-    def excuteButtonClicked(self):
+    def search1ButtonClicked(self):
         filename = self.filename.text()
-        interface_name = self.interface_input.text()
-        if filename and interface_name:
-            result = self.config_finder(filename, interface_name)
+        search1 = self.search1_input.text()
+        if filename and search1:
+            result = self.config_finder(filename, search1)
             result1 = "\n".join(result)
-            self.result_output.setText(result1)
+            self.search1_output.setText(result1)
         else:
-            self.result_output.setText("읽어올 파일경로와 인터페이스를 입력하세요.")
+            self.search1_output.setText("읽어올 파일경로와 인터페이스를 입력하세요.")
 
-    def searchButtonClicked(self):
+    def search2ButtonClicked(self):
         filename = self.filename.text()
-        search = self.search_input.text()
-        if filename and search:
-            result = self.config_finder(filename, search)
+        search2 = self.search2_input.text()
+        if filename and search2:
+            result = self.config_finder(filename, search2)
             result1 = "\n".join(result)
-            self.search_output.setText(result1)
+            self.search2_output.setText(result1)
         else:
-            self.search_output.setText("읽어올 파일경로와 인터페이스를 입력하세요.")
+            self.search2_output.setText("읽어올 파일경로와 인터페이스를 입력하세요.")
 
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ex = ConfigFinder()
-    sys.exit(app.exec_())
+    def showModal(self):
+        return super().exec_()
+
+# if __name__ == '__main__':
+#     app = QApplication(sys.argv)
+#     ex = ConfigFinder()
+#     ex.show()
+#     sys.exit(app.exec_())
