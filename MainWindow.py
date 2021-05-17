@@ -12,13 +12,13 @@ class MainWindow(QMainWindow):
 
     def initUI(self):
         self.setWindowTitle('Network_Utility')
-        self.setGeometry(200, 100, 1400, 900)
+        self.setGeometry(200, 100, 400, 300)
 
         self.Config_Finder_Button = QPushButton('Config_Finder')
         self.Config_Finder_Button.clicked.connect(self.Click_Config_Finder)
         self.Netconf_Test_Button = QPushButton('Netconf_Test')
         self.Netconf_Test_Button.clicked.connect(self.Click_Netconf_Test)
-        self.Optic_Finder_Button = QPushButton('Optic_Finder_Test')
+        self.Optic_Finder_Button = QPushButton('Optic_Finder')
         self.Optic_Finder_Button.clicked.connect(self.Click_Optic_Finder)
 
 
