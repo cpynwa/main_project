@@ -9,7 +9,7 @@ class OpticFinder(QDialog):
         self.initUI()
 
     def initUI(self):
-        self.setWindowTitle('Config_Finder')
+        self.setWindowTitle('Optic_Finder')
         self.setGeometry(300, 300, 1400, 700)
 
         self.filelist = QLineEdit()
