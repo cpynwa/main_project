@@ -3,8 +3,8 @@ import re
 import ipcalc
 from PyQt5.QtWidgets import *
 
-#class ConfigFinder(QWidget):
-class ConfigFinder(QDialog):
+class ConfigFinder(QWidget):
+#class ConfigFinder(QDialog):
 
     def __init__(self):
         super().__init__()
@@ -113,11 +113,11 @@ class ConfigFinder(QDialog):
             self.search2_output.setText("읽어올 파일경로와 인터페이스를 입력하세요.")
 
 
-    def showModal(self):
-        return super().exec_()
+    # def showModal(self):
+    #     return super().exec_()
 
-# if __name__ == '__main__':
-#     app = QApplication(sys.argv)
-#     ex = ConfigFinder()
-#     ex.show()
-#     sys.exit(app.exec_())
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = ConfigFinder()
+    ex.show()
+    sys.exit(app.exec_())
