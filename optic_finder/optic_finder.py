@@ -84,6 +84,8 @@ class OpticFinder(QDialog):
         for i in idx:
             interface = {"interface": "", "status": "", "description": ""}
             interface["interface"] = lines[i].split()[2].strip(",")
+
+
             try:
                 interface["status"] = lines[i].split()[8]
             except:
@@ -97,7 +99,6 @@ class OpticFinder(QDialog):
             else:
                 interface["description"] = ""
                 interface_list.append(interface)
-
         return interface_list
 
 
@@ -133,11 +134,11 @@ class OpticFinder(QDialog):
                 # 출력
                 for i in range(len(interface_info)):
                     print(
-                        (filename.replace(path+'/','')).ljust(42)+
-                        interface_info[i]["interface"].ljust(14)+
-                        interface_info[i]["status"].ljust(9)+
-                        interface_info[i]["description"].ljust(40)+
-                        interface_info[i]["optic"].ljust(20)+
+                        (filename.replace(path+'/','')).ljust(42)+ "|" +
+                        interface_info[i]["interface"].ljust(14)+ "|" +
+                        interface_info[i]["status"].ljust(9)+ "|" +
+                        interface_info[i]["description"].ljust(40)+ "|" +
+                        interface_info[i]["optic"].ljust(20)+ "|" +
                         interface_info[i]["serial"]
                     ,file=f)
 
@@ -148,7 +149,6 @@ class OpticFinder(QDialog):
 
     def executeButtonClicked(self):
         path = self.filelist.text()
-        print(path)
         file_list = os.listdir(path)
         file_list_1 = []
         for file in file_list:

@@ -1,7 +1,7 @@
 from jnpr.junos import Device
 from jnpr.junos.utils.config import Config
 from jnpr.junos.exception import *
-import sys
+from lxml import etree
 from PyQt5.QtWidgets import *
 
 #class NetconfTest(QWidget):
@@ -13,10 +13,8 @@ class NetconfTest(QDialog):
 
     def initUI(self):
 
-
         self.setWindowTitle('netconf_test')
         self.setGeometry(300, 300, 1400, 700)
-
 
         #정보입력 창
         self.ip = QLineEdit()
@@ -31,6 +29,8 @@ class NetconfTest(QDialog):
         self.commitcheckButton.setAutoDefault(False)
         self.commitButton = QPushButton('commit')
         self.commitButton.setAutoDefault(False)
+        self.cliButton = QPushButton('cli send')
+        self.cliButton.setAutoDefault(False)
 
         Line1 = QHBoxLayout()
         Line1.addWidget(QLabel('IP:'))
@@ -52,6 +52,7 @@ class NetconfTest(QDialog):
         right_button.addWidget(self.compareButton)
         right_button.addWidget(self.commitcheckButton)
         right_button.addWidget(self.commitButton)
+        right_button.addWidget(self.cliButton)
 
         input_layout = QVBoxLayout()
         input_layout.addLayout(Line1)
@@ -68,6 +69,7 @@ class NetconfTest(QDialog):
         self.compareButton.clicked.connect(self.compare_button)
         self.commitcheckButton.clicked.connect(self.check_button)
         self.commitButton.clicked.connect(self.commit_button)
+        self.cliButton.clicked.connect(self.cli_button)
 
     def compare_button(self):
         source = self.input.toPlainText()
@@ -75,6 +77,7 @@ class NetconfTest(QDialog):
         id = self.id.text()
         pw = self.pw.text()
         dev = Device(host=str(ip), user=str(id), password=str(pw)).open()
+
         with Config(dev, mode='private') as cu:
             try:
                 cu.load(source, format='set')
@@ -82,7 +85,6 @@ class NetconfTest(QDialog):
                 self.result.setText(result)
             except ConfigLoadError as err:
                 self.result.setText(str(err))
-        dev.close()
 
     def check_button(self):
         source = self.input.toPlainText()
@@ -90,14 +92,20 @@ class NetconfTest(QDialog):
         id = self.id.text()
         pw = self.pw.text()
         dev = Device(host=ip, user=id, password=pw).open()
-        with Config(dev, mode='private') as cu:
-            try:
-                cu.load(source, format='set')
-                cu.commit_check()
-                self.result.setText("configuration check succeeds")
-            except ConfigLoadError as err:
-                self.result.setText(str(err))
-        dev.close()
+        try:
+            with Config(dev, mode='private') as cu:
+                try:
+                    cu.load(source, format='set')
+                    cu.commit_check()
+                    self.result.setText("configuration check succeeds")
+                except Exception as err:
+                    self.result.setText(str(err))
+                # except ConfigLoadError as err:
+                #     self.result.setText(str(err))
+                # except CommitError as comerr:
+                #     self.result.setText(str(comerr))
+        except Exception as cerr:
+            self.result.setText(str(cerr))
 
     def commit_button(self):
         source = self.input.toPlainText()
@@ -112,7 +120,22 @@ class NetconfTest(QDialog):
                 self.result.setText("commit complete")
             except ConfigLoadError as err:
                 self.result.setText(str(err))
-        dev.close()
+            except CommitError as comerr:
+                self.result.setText(str(comerr))
+
+    def cli_button(self):
+        source = self.input.toPlainText()
+        ip = self.ip.text()
+        id = self.id.text()
+        pw = self.pw.text()
+        with Device(host=ip, user=id, password=pw) as dev:
+            try:
+                result = dev.rpc.cli(command=source)
+                self.result.setText(str(etree.tounicode(result)))
+            except ConfigLoadError as err:
+                self.result.setText(str(err))
+            except CommitError as comerr:
+                self.result.setText(str(comerr))
 
     def showModal(self):
         return super().exec_()
