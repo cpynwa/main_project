@@ -4,6 +4,7 @@ from PyQt5.QtCore import *
 from config_finder.config_finder import ConfigFinder
 from netconf_tester.netconf_test import NetconfTest
 from optic_finder.optic_finder import OpticFinder
+from forti.fortiWindow import fortiWindow
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -20,12 +21,15 @@ class MainWindow(QMainWindow):
         self.Netconf_Test_Button.clicked.connect(self.Click_Netconf_Test)
         self.Optic_Finder_Button = QPushButton('Optic_Finder')
         self.Optic_Finder_Button.clicked.connect(self.Click_Optic_Finder)
+        self.Forti_Search_Button = QPushButton('forti')
+        self.Forti_Search_Button.clicked.connect(self.Click_Forti_Search)
 
 
         grid = QGridLayout()
         grid.addWidget(self.Config_Finder_Button, 0, 0)
         grid.addWidget(self.Netconf_Test_Button, 0, 1)
         grid.addWidget(self.Optic_Finder_Button, 1, 0)
+        grid.addWidget(self.Forti_Search_Button, 1, 1)
 
         centralWidget = QWidget()
         centralWidget.setLayout(grid)
@@ -42,6 +46,10 @@ class MainWindow(QMainWindow):
 
     def Click_Optic_Finder(self):
         win = OpticFinder()
+        win.showModal()
+
+    def Click_Forti_Search(self):
+        win = fortiWindow()
         win.showModal()
 
     # def show(self):

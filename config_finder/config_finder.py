@@ -1,7 +1,6 @@
-import sys
 import re
 import ipcalc
-from PyQt5.QtWidgets import *
+from PyQt5.QtWidgets import QDialog, QLineEdit, QPushButton, QTextEdit, QGridLayout, QLabel, QFileDialog
 
 # class ConfigFinder(QWidget):
 class ConfigFinder(QDialog):
